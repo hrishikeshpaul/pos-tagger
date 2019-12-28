@@ -1,5 +1,5 @@
 
-from brain.label import main
+from label import main
 
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS, cross_origin

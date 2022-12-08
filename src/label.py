@@ -17,16 +17,15 @@ def read_data(fname):
 
 def main(sentence):
     env = os.environ.get("ENV")
-    solver = Solver(env)
+    solver = Solver()
 
     # test_file = 'bc.test'
     test_data = sentence.get("sentence", "").split()
 
-    if env == 'development':
-        print("Learning model...")
-        train_file = "data/bc.train"
-        train_data = read_data(train_file)
-        solver.train(train_data)
+    train_file = "data/bc.train"
+    train_data = read_data(train_file)
+    solver.train(train_data, env)
+        
 
     print("Loading test data...")
     # test_data = ('poet', 'twisted', 'again', 'and', "nick's", 'knuckles', 'scraped', 'on', 'the', 'air', 'tank', ',', 'ripping', 'off', 'the', 'skin', '.')

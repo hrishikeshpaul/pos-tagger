@@ -22,15 +22,6 @@ class Solver:
     # Calculate the log of the posterior probability of a given sentence
     #  with a given part-of-speech labeling. Right now just returns -999 -- fix this!
 
-    def __init__(self, env = 'production') -> None:
-        print('envhere', env)
-        if env == 'production':
-            self.emission = readPkl('emission_prob')
-            self.initial = readPkl('initial')
-            self.speech = readPkl('speech')
-            self.transition = readPkl('transition')
-            self.part_of_speech_prob = readPkl('part_of_speech_prob')
-
     def posterior(self, model, sentence, label):
         """
 
@@ -139,11 +130,21 @@ class Solver:
             print("Unknown algo!")
 
     # Do the training!
-    def train(self, data):
+    def train(self, data, env = 'production'):
         """
         :param data:    Stores the words and its related part of speech
 
         """
+
+        if env == 'production':
+            self.emission = readPkl('emission_prob')
+            self.initial = readPkl('initial')
+            self.speech = readPkl('speech')
+            self.transition = readPkl('transition')
+            self.part_of_speech_prob = readPkl('part_of_speech_prob')
+            return
+
+        print("Learning model...")
 
         speech = [
             "adj",

@@ -23,7 +23,7 @@ class Solver:
     #  with a given part-of-speech labeling. Right now just returns -999 -- fix this!
 
     def __init__(self, env = 'DEV') -> None:
-        if env == 'PROD':
+        if env == 'production':
             self.emission = readPkl('emission_prob')
             self.initial = readPkl('initial')
             self.speech = readPkl('speech')

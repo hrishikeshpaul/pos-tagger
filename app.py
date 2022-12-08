@@ -1,10 +1,15 @@
 from src.label import main
 
+from dotenv import find_dotenv, load_dotenv
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
+
+
+env_file = find_dotenv(".env.dev")
+load_dotenv(env_file)
 
 
 @app.route("/", methods=["POST", "OPTIONS"])

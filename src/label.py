@@ -1,6 +1,6 @@
 from src.pos_scorer import Score
 from src.pos_solver import *
-
+import os
 
 # Read in training or test data file
 #
@@ -16,14 +16,17 @@ def read_data(fname):
 
 
 def main(sentence):
-    # train_file = "data/bc.train"
+    env = os.environ.get("ENV")
+    solver = Solver(env)
+
     # test_file = 'bc.test'
     test_data = sentence.get("sentence", "").split()
 
-    # print("Learning model...")
-    solver = Solver()
-    # train_data = read_data(train_file)
-    # solver.train(train_data)
+    if env == 'development':
+        print("Learning model...")
+        train_file = "data/bc.train"
+        train_data = read_data(train_file)
+        solver.train(train_data)
 
     print("Loading test data...")
     # test_data = ('poet', 'twisted', 'again', 'and', "nick's", 'knuckles', 'scraped', 'on', 'the', 'air', 'tank', ',', 'ripping', 'off', 'the', 'skin', '.')
@@ -41,4 +44,3 @@ def main(sentence):
     # print(posteriors)
 
     return output
-

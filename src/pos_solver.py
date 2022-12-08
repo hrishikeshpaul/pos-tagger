@@ -8,11 +8,9 @@
 # Part 1- POS Tagging
 #
 
-import random
-import math
-import re
 import numpy as np
 from collections import Counter
+from src.files import dumpPkl, readPkl
 
 
 # We've set up a suggested code structure, but feel free to change it. Just
@@ -23,6 +21,14 @@ from collections import Counter
 class Solver:
     # Calculate the log of the posterior probability of a given sentence
     #  with a given part-of-speech labeling. Right now just returns -999 -- fix this!
+
+    def __init__(self) -> None:
+        self.emission = readPkl('emission_prob')
+        self.initial = readPkl('initial')
+        self.speech = readPkl('speech')
+        self.transition = readPkl('transition')
+        self.part_of_speech_prob = readPkl('part_of_speech_prob')
+
     def posterior(self, model, sentence, label):
         """
 
@@ -41,7 +47,7 @@ class Solver:
                         self.part_of_speech_prob[label[i]]
                     )
                 else:
-                    cost += np.log(1 / float(10 ** 10)) + (
+                    cost += np.log(1 / float(10**10)) + (
                         self.part_of_speech_prob[label[i]]
                     )
             return cost
@@ -55,7 +61,7 @@ class Solver:
                     posterior.append(
                         self.emission[label[i]][sentence[i]] + self.initial[label[i]]
                         if sentence[i] in self.emission[label[i]]
-                        else (1 / float(10 ** 10)) + self.initial[label[i]]
+                        else (1 / float(10**10)) + self.initial[label[i]]
                     )
 
                 else:
@@ -76,7 +82,7 @@ class Solver:
                         )
                         + self.part_of_speech_prob[label[i]]
                         if sentence[i] in self.emission[label[i]]
-                        else (1 / float(10 ** 10))
+                        else (1 / float(10**10))
                         + (
                             np.log(self.transition[label[i - 1]][label[i]])
                             + self.part_of_speech_prob[label[i - 1]]
@@ -97,7 +103,7 @@ class Solver:
             return cost
         # code inspired by https://github.com/mjaglan/AI-Foundations/blob/master/5%20Part%20of%20Speech%20(NB%2C%20Viterbi%2C%20MCMC)/pos_solver.py
         #    and https://github.com/Chitz/Part-of-Speech-Tagger/ starts here
-        elif model == "HMM":
+        if model == "HMM":
             posterior = []
             for i in range(len(sentence)):
                 if i == 0:
@@ -110,7 +116,7 @@ class Solver:
                         )
                     else:
                         posterior.append(
-                            ((self.initial[label[i]])) + np.log((1 / float(10 ** 10)))
+                            ((self.initial[label[i]])) + np.log((1 / float(10**10)))
                         )
                 else:
                     if sentence[i] in self.emission[label[i]]:
@@ -121,7 +127,7 @@ class Solver:
                         )
                     else:
                         posterior.append(
-                            np.log((1 / float(10 ** 10)))
+                            np.log((1 / float(10**10)))
                             + posterior[i - 1]
                             + np.log(self.transition[label[i - 1]][label[i]])
                         )
@@ -138,18 +144,18 @@ class Solver:
         """
 
         speech = [
-            'adj',
-            'adv',
-            'adp',
-            'conj',
-            'det',
-            'noun',
-            'num',
-            'pron',
-            'prt',
-            'verb',
-            'x',
-            '.',
+            "adj",
+            "adv",
+            "adp",
+            "conj",
+            "det",
+            "noun",
+            "num",
+            "pron",
+            "prt",
+            "verb",
+            "x",
+            ".",
         ]
         train_data = []
 
@@ -175,7 +181,7 @@ class Solver:
         # tuple with word, part of speech and occurences pair
         word_count = Counter(word_speech)
 
-        '''Calculatingthe Posterior Probability'''
+        """Calculatingthe Posterior Probability"""
         part_of_speech_dict = {part_of_speech: {} for part_of_speech in speech}
 
         for w in word_count:
@@ -228,7 +234,7 @@ class Solver:
 
         for part_of_speech in speech:
             transition_probability[part_of_speech] = {
-                part_of_speech: (1 / float(10 ** 10)) for part_of_speech in speech
+                part_of_speech: (1 / float(10**10)) for part_of_speech in speech
             }
             for key, v in tcounter[part_of_speech].items():
                 tt = list(tcounter[part_of_speech].values())
@@ -242,6 +248,13 @@ class Solver:
         self.speech = speech
         self.transition = transition_probability
         self.part_of_speech_prob = part_of_speech_prob
+
+        dumpPkl('emission_prob', emission_prob)
+        dumpPkl('initial', initial_prob_part_of_speech)
+        dumpPkl('speech', speech)
+        dumpPkl('transition', transition_probability)
+        dumpPkl('part_of_speech_prob', part_of_speech_prob)
+
 
     def simplified(self, sentence):
         """
@@ -274,7 +287,7 @@ class Solver:
             "PartofSpeech_" + str(i): {} for i in range(len(sentence))
         }
 
-        sequence = ['noun'] * len(sentence)
+        sequence = ["noun"] * len(sentence)
         for i in range(len(sentence)):
 
             if i == 0:
@@ -283,7 +296,7 @@ class Solver:
                         pos: np.exp(self.emission[pos][sentence[i]])
                         * np.exp(self.initial[pos])
                         if sentence[i] in self.emission[pos]
-                        else (1 / float(10 ** 10)) * np.exp(self.initial[pos])
+                        else (1 / float(10**10)) * np.exp(self.initial[pos])
                         for pos in self.speech
                     }
 
@@ -328,7 +341,7 @@ class Solver:
                         )
                         * np.exp(self.part_of_speech_prob[pos])
                         if sentence[i] in self.emission[pos]
-                        else (1 / float(10 ** 10))
+                        else (1 / float(10**10))
                         * (
                             float(
                                 (self.transition[sequence[i - 1]][pos])
@@ -375,19 +388,22 @@ class Solver:
     def hmm_viterbi(self, sentence):
         part_of_speech = []
         p = 0
-        maxstate = ''
+        maxstate = ""
         for i in range(len(sentence)):
             prior = []
             if i == 0:
-
                 for j in self.speech:
                     if sentence[i] in self.emission[j]:
                         prior.append(self.initial[j] + self.emission[j][sentence[i]])
 
                     else:
-                        prior.append(self.initial[j] + np.log(1 / 10 ** 10))
+                        prior.append(self.initial[j] + np.log(1 / 10**10))
 
-                part_of_speech.append(self.speech[np.argmax(prior)])
+                part_of_speech.append({
+                    "word": sentence[i],
+                    "tag": self.speech[np.argmax(prior)],
+                    "prob": 100 + np.max(prior)
+                })
                 p = max(prior)
                 maxstate = self.speech[np.argmax(prior)]
             else:
@@ -401,13 +417,19 @@ class Solver:
                     else:
                         prior.append(
                             p
-                            + np.log(1 / 10 ** 10)
+                            + np.log(1 / 10**10)
                             + np.log(self.transition[maxstate][self.speech[k]])
                         )
                 maxstate = self.speech[np.argmax(prior)]
                 p = np.max(prior)
 
-                part_of_speech.append(self.speech[np.argmax(prior)])
+
+                # part_of_speech.append(self.speech[np.argmax(prior)])
+                part_of_speech.append({
+                    "word": sentence[i],
+                    "tag": self.speech[np.argmax(prior)],
+                    "prob": 100 + np.max(prior)
+                })
 
         return part_of_speech
 

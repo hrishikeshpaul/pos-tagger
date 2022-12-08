@@ -17,6 +17,7 @@ def read_data(fname):
 
 def main(sentence):
     env = os.environ.get("ENV")
+    print('environment - ', env)
     solver = Solver()
 
     # test_file = 'bc.test'

@@ -11,6 +11,7 @@ CORS(app, support_credentials=True)
 @app.route('/', methods=['POST', 'OPTIONS'])
 @cross_origin(supports_credentials=True)
 def home():
+    print('request -- ', request.get_json())
     res = main(request.get_json())
     return res
 

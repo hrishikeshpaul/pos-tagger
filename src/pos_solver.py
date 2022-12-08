@@ -22,7 +22,7 @@ class Solver:
     # Calculate the log of the posterior probability of a given sentence
     #  with a given part-of-speech labeling. Right now just returns -999 -- fix this!
 
-    def __init__(self, env = 'DEV') -> None:
+    def __init__(self, env = 'production') -> None:
         if env == 'production':
             self.emission = readPkl('emission_prob')
             self.initial = readPkl('initial')

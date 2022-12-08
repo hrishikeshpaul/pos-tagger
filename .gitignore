@@ -23,3 +23,6 @@ htmlcov/
 .coverage
 .coverage.*
 *,cover
+
+client/node_modules
+client/.env.local

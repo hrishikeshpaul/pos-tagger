@@ -13,3 +13,9 @@ export const getTags = async (sentence: string): Promise<Tag[]> => {
 
     return data;
 };
+
+export const getHealth = async (): Promise<string> => {
+    const { data }: AxiosResponse<string> = await Http.get('/');
+
+    return data;
+};

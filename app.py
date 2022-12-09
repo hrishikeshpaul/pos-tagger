@@ -20,6 +20,14 @@ def home():
 
     return res
 
+@app.route("/", methods=["GET", "OPTIONS"])
+@cross_origin(supports_credentials=True)
+def health():
+    print("checking health...") 
+
+    return 'success', 200
+
+
 
 if __name__ == "__main__":
     app.run(threaded=True, port=5000, debug=True)

@@ -1,0 +1,22 @@
+.post-tagger {
+    .results-box {
+        position: relative;
+        .results-prob {
+            position: absolute;
+            margin-top: -20px;
+            opacity: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: margin 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+
+        &:hover {
+            .results-prob {
+                margin-top: -4px;
+                opacity: 1;
+                
+            }
+        }
+    }
+}

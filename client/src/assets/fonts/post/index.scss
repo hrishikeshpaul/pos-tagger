@@ -1,0 +1,17 @@
+$font-family: 'POST';
+
+@mixin font($font-file, $font-weight) {
+    @font-face {
+        font-family: $font-family;
+        src: url($font-file + '.ttf');
+        font-weight: $font-weight;
+    }
+}
+
+@include font('./THICCCBOI-Light', 100);
+@include font('./THICCCBOI-Regular', 400);
+@include font('./THICCCBOI-Medium', 500);
+@include font('./THICCCBOI-SemiBold', 600);
+@include font('./THICCCBOI-Bold', 700);
+@include font('./THICCCBOI-ExtraBold', 800);
+@include font('./THICCCBOI-Black', 900);
